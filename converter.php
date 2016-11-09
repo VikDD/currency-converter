@@ -2,11 +2,7 @@
 define('SOURSE_PATH', '');
 
 function converter($value, $from_multiple = 'RUB', $to_multiple = 'RUB', $sourse = '') {
-	if (get_from_cache($from_multiple, $to_multiple)) {
-		$final_multiple = get_from_cache($from_multiple, $to_multiple);
-
-		return $value * $final_multiple;
-	} else {
+	if (!get_from_cache($from_multiple, $to_multiple)) {
 		if (file_exists(SOURSE_PATH.'/'.$sourse.'.php')) {
 			include SOURSE_PATH.'/'.$sourse.'.php';
 		} else {
@@ -33,6 +29,10 @@ function converter($value, $from_multiple = 'RUB', $to_multiple = 'RUB', $sourse
 
 		set_to_cache($from_multiple, $to_multiple);
 	}
+
+	$final_multiple = get_from_cache($from_multiple, $to_multiple);
+
+	return $value * $final_multiple;
 }
 
 function get_from_cache($from_multiple, $to_multiple) {
