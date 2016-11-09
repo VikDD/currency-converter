@@ -4,9 +4,11 @@ define('SOURSE_PATH', '');
 function converter($value, $from_currency = 'RUB', $to_currency = 'RUB', $sourse = '') {
 	$from_currency_multiple = 1;
 	$to_currency_multiple = 1;
-	if (!get_from_cache($from_currency, $to_currency)) {
-		if (file_exists(SOURSE_PATH.'/'.$sourse.'.php')) {
-			include SOURSE_PATH.'/'.$sourse.'.php';
+	$final_multiple = get_from_cache($from_currency, $to_currency);
+	if ($final_multiple) {
+		$ext_file = SOURSE_PATH.'/'.$sourse;
+		if (file_exists($ext_file)) {
+			include $ext_file;
 		} else {
 			$context = stream_context_create(array(
 				'http' => array(
@@ -32,9 +34,7 @@ function converter($value, $from_currency = 'RUB', $to_currency = 'RUB', $sourse
 		}
 
 		set_to_cache($from_currency, $to_currency, $from_currency_multiple, $to_currency_multiple);
-	}
-
-	$final_multiple = get_from_cache($from_currency, $to_currency);
+	}	
 
 	return $value * $final_multiple;
 }
